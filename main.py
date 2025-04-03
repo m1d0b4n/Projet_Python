@@ -19,18 +19,20 @@ def main_menu():
 
 # ------| Choix 1 |-----------------------------------------
         if choice == "1":
-            code = input("\n👉 Entrez un code (département à 2 chiffres ou postal à 5 chiffres) : ").strip()
-
-            if code.isdigit() and len(code) in [2, 5]:
-                population, nom, code_utilise = api.get_population_by_code(code)
-                if population:
-                    url_cp = f"https://www.code-postal.com/{code_utilise}.html"
-                    print(f"\n✳️  Population de {nom} ({code_utilise}) : {population}")
-                    print(f"✳️  Plus d'infos ?  {url_cp} (carte de la zone géographique éxacte de {nom})")
+            while True:
+                code = input("\n👉 Entrez un code (département à 2 chiffres ou postal à 5 chiffres) : ").strip()
+                
+                if code.isdigit() and len(code) in [2, 5]:
+                    population, nom, code_utilise = api.get_population_by_code(code)
+                    if population:
+                        url_cp = f"https://www.code-postal.com/{code_utilise}.html"
+                        print(f"\n✳️  Population de {nom} ({code_utilise}) : {population}")
+                        print(f"✳️  Plus d'infos ?  {url_cp} (carte de la zone géographique exacte de {nom})")
+                    else:
+                        print(f"\n❌ Aucune commune trouvée pour le code {code_utilise}.\n")
+                    break  # sortie de la boucle après traitement
                 else:
-                    print(f"\n❌ Aucune commune trouvée pour le code {code_utilise}.\n")
-            else:
-                print("\n❌ Entrée invalide. Veuillez entrer un code à 2 ou 5 chiffres uniquement (département ou commune).")
+                    print("\n❌ Entrée invalide. Veuillez entrer un code à 2 ou 5 chiffres uniquement (département ou commune).")
         
 # ------| Choix 2 |-----------------------------------------
         elif choice == "2":
