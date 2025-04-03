@@ -1,6 +1,7 @@
 import json
 import os
 import pandas as pd
+from openpyxl import load_workbook
 
 class LogAnalyzer:
     def __init__(self, filepath):
@@ -29,6 +30,7 @@ class LogAnalyzer:
 
         return errors, warnings
 
+
     def export_to_excel(self, logs, output_path):
         rows = []
         for log in logs:
@@ -39,4 +41,13 @@ class LogAnalyzer:
             })
 
         df = pd.DataFrame(rows)
-        df.to_excel(output_path, index=False)
+
+        sheet_name = "logs"
+        file_exists = os.path.exists(output_path)
+
+        if file_exists:
+            with pd.ExcelWriter(output_path, engine='openpyxl', mode='a', if_sheet_exists='new') as writer:
+                df.to_excel(writer, sheet_name=sheet_name, index=False)
+        else:
+            with pd.ExcelWriter(output_path, engine='openpyxl') as writer:
+                df.to_excel(writer, sheet_name=sheet_name, index=False)

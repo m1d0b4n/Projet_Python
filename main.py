@@ -24,38 +24,38 @@ def main_menu():
                 if population:
                     url_cp = f"https://www.code-postal.com/{code_utilise}.html"
                     print(f"\n✳️  Population de {nom} ({code_utilise}) : {population}")
-                    print(f"✳️  Plus d'infos ?  {url_cp} (carte de la zone géographique éxacte de {nom})\n")
+                    print(f"✳️  Plus d'infos ?  {url_cp} (carte de la zone géographique éxacte de {nom})")
                 else:
                     print(f"\n❌ Aucune commune trouvée pour le code {code_utilise}.\n")
             else:
-                print("\n❌ Entrée invalide. Veuillez entrer un code à 2 ou 5 chiffres uniquement (département ou commune).\n")
+                print("\n❌ Entrée invalide. Veuillez entrer un code à 2 ou 5 chiffres uniquement (département ou commune).")
         
 # ------| Choix 2 |-----------------------------------------
         elif choice == "2":
-            path = input("\n👉 Entrez le chemin du fichier JSON de logs à analyser : ").strip()
+            path = input("\n👉 Entrez le chemin du fichier JSON de logs à analyser (ex : ./data/logs.json) : ").strip()
             analyzer = LogAnalyzer(path)
 
             if not analyzer.is_valid_path():
-                print("❌ Chemin invalide ou fichier introuvable.")
+                print("\n❌ Chemin invalide ou fichier introuvable.")
                 continue
 
             try:
                 analyzer.load_logs()
                 errors, warnings = analyzer.analyze_logs()
-                print(f"\n✅ {len(errors)} erreurs & {len(warnings)} avertissements trouvés.\n")
+                print(f"\n✅ {len(errors)} erreurs & {len(warnings)} avertissements trouvés.")
 
-                export = input("📁 Voulez-vous exporter ces logs dans un fichier Excel ? (oui/non) : ").strip().lower()
+                export = input("\n📁 Voulez-vous exporter ces logs dans un fichier Excel ? (oui/non) : ").strip().lower()
                 if export in ["oui", "o", "yes", "y"]:
-                    out_path = input("👉 Entrez le chemin de sortie du fichier Excel (ex : ./export.xlsx) : ").strip()
+                    out_path = input("\n👉 Entrez le chemin de sortie du fichier Excel (ex : ./data/extract.xlsx) : ").strip()
                     try:
                         analyzer.export_to_excel(errors + warnings, out_path)
-                        print(f"✅ Export terminé avec succès : {out_path}")
+                        print(f"\n✅ Export terminé avec succès : {out_path}")
                     except Exception as e:
-                        print(f"❌ Erreur lors de l'export : {e}")
+                        print(f"\n❌ Erreur lors de l'export : {e}")
                 else:
                     print("\n❌ Export annulé par l'utilisateur.")
             except Exception as e:
-                print(f"❌ Une erreur est survenue pendant l’analyse : {e}")
+                print(f"\n❌ Une erreur est survenue pendant l’analyse : {e}")
 
 # ------| Choix 0 |------------------------------------------
         elif choice == "0":
@@ -64,7 +64,7 @@ def main_menu():
 
 # ------| Choix inexistants |--------------------------------
         else:
-            print("❌ Option invalide.")
+            print("\n❌ Option invalide.")
 
 
 if __name__ == "__main__":
