@@ -1,10 +1,12 @@
 from modules.geo_api import GeoAPI
+from modules.ascii_art import ascii_printer
 
 def main_menu():
+    ascii_printer()
     api = GeoAPI()
 
     while True:
-        print("\n=== MENU ===")
+        print("\n=======| MENU |===================================================\n")
         print("1️⃣   Rechercher la population par code (département ou commune)")
         print("0️⃣   Quitter")
         choice = input("\n👉 Choix : ").strip()
