@@ -32,28 +32,35 @@ def main_menu():
         
 # ------| Choix 2 |-----------------------------------------
         elif choice == "2":
-            path = input("\n👉 Entrez le chemin du fichier JSON de logs à analyser (ex : ./data/logs.json) : ").strip()
-            analyzer = LogAnalyzer(path)
+            while True:
+                path = input("\n👉 Entrez le chemin du fichier JSON de logs à analyser (ex : ./data/logs.json) : ").strip()
+                analyzer = LogAnalyzer(path)
 
-            if not analyzer.is_valid_path():
-                print("\n❌ Chemin invalide ou fichier introuvable.")
-                continue
+                if analyzer.is_valid_path():
+                    break
+                else:
+                    print("\n❌ Chemin invalide ou fichier introuvable. Veuillez réessayer.")
 
             try:
                 analyzer.load_logs()
                 errors, warnings = analyzer.analyze_logs()
                 print(f"\n✅ {len(errors)} erreurs & {len(warnings)} avertissements trouvés.")
 
-                export = input("\n📁 Voulez-vous exporter ces logs dans un fichier Excel ? (oui/non) : ").strip().lower()
-                if export in ["oui", "o", "yes", "y"]:
-                    out_path = input("\n👉 Entrez le chemin de sortie du fichier Excel (ex : ./data/extract.xlsx) : ").strip()
-                    try:
-                        analyzer.export_to_excel(errors + warnings, out_path)
-                        print(f"\n✅ Export terminé avec succès : {out_path}")
-                    except Exception as e:
-                        print(f"\n❌ Erreur lors de l'export : {e}")
-                else:
-                    print("\n❌ Export annulé par l'utilisateur.")
+                while True:
+                    export = input("\n📁 Voulez-vous exporter ces logs dans un fichier Excel ? (oui/non) : ").strip().lower()
+                    if export in ["oui", "o", "yes", "y"]:
+                        out_path = input("\n👉 Entrez le chemin de sortie du fichier Excel (ex : ./export.xlsx) : ").strip()
+                        try:
+                            analyzer.export_to_excel(errors + warnings, out_path)
+                            print(f"\n✅ Export terminé avec succès : {out_path}")
+                        except Exception as e:
+                            print(f"\n❌ Erreur lors de l'export : {e}")
+                        break
+                    elif export in ["non", "n", "no"]:
+                        print("\n❌ Export annulé par l'utilisateur.")
+                        break
+                    else:
+                        print("\n❌ Entrée invalide. Répondez par 'oui' ou 'non'.")
             except Exception as e:
                 print(f"\n❌ Une erreur est survenue pendant l’analyse : {e}")
 
