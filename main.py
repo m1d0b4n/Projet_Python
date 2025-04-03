@@ -1,6 +1,8 @@
 from modules.geo_api import GeoAPI
 from modules.ascii_art import ascii_printer
 from modules.log_analyzer import LogAnalyzer
+from utils.validators import is_valid_excel_path
+
 
 # ------| Lancement du programme |--------------------------
 def main_menu():
@@ -49,12 +51,17 @@ def main_menu():
                 while True:
                     export = input("\n📁 Voulez-vous exporter ces logs dans un fichier Excel ? (oui/non) : ").strip().lower()
                     if export in ["oui", "o", "yes", "y"]:
-                        out_path = input("\n👉 Entrez le chemin de sortie du fichier Excel (ex : ./export.xlsx) : ").strip()
-                        try:
-                            analyzer.export_to_excel(errors + warnings, out_path)
-                            print(f"\n✅ Export terminé avec succès : {out_path}")
-                        except Exception as e:
-                            print(f"\n❌ Erreur lors de l'export : {e}")
+                        while True:
+                            out_path = input("\n👉 Entrez le chemin de sortie du fichier Excel (ex : ./export.xlsx) : ").strip()
+                            if is_valid_excel_path(out_path):
+                                try:
+                                    analyzer.export_to_excel(errors + warnings, out_path)
+                                    print(f"\n✅ Export terminé avec succès : {out_path}")
+                                except Exception as e:
+                                    print(f"\n❌ Erreur lors de l'export : {e}")
+                                break
+                            else:
+                                print("\n❌ Chemin invalide. Le fichier doit se terminer par .xlsx, ne pas contenir de caractères interdits et ne pas être un nom réservé.")
                         break
                     elif export in ["non", "n", "no"]:
                         print("\n❌ Export annulé par l'utilisateur.")
