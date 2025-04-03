@@ -5,33 +5,28 @@ def main_menu():
 
     while True:
         print("\n=== MENU ===")
-        print("1. Rechercher la population par code (département ou commune)")
-        print("2. Quitter")
-        choice = input("Choix : ")
+        print("1️⃣   Rechercher la population par code (département ou commune)")
+        print("0️⃣   Quitter")
+        choice = input("\n👉 Choix : ").strip()
 
         if choice == "1":
-            code = input("Entrez un code (département ou commune) : ")
-            if len(code) == 2 and code.isdigit():
-                population = api.get_population_by_departement(code)
+            code = input("\n👉 Entrez un code (département à 2 chiffres ou postal à 5 chiffres) : ").strip()
+
+            if code.isdigit() and len(code) in [2, 5]:
+                population, nom, code_utilise = api.get_population_by_code(code)
                 if population:
-                    print(f"Population du département {code} : {population}")
+                    url_cp = f"https://www.code-postal.com/{code_utilise}.html"
+                    print(f"\n➡️  Population de {nom} ({code_utilise}) : {population}")
+                    print(f"➡️  Plus d'infos ? ce lien renvoie vers une carte qui montre la zone géographique éxacte de {nom} : {url_cp}\n")
                 else:
-                    print("Département non trouvé.")
-            elif len(code) == 5 and code.isdigit():
-                population = api.get_population_by_commune(code)
-                if population:
-                    print(f"Population de la commune {code} : {population}")
-                else:
-                    print("Commune non trouvée.")
+                    print(f"\n❌ Aucune commune trouvée pour le code {code_utilise}.\n")
             else:
-                print("Code invalide. Entrez 2 ou 5 chiffres.")
-
-        elif choice == "2":
-            print("Au revoir.")
+                print("\n❌ Entrée invalide. Veuillez entrer un code à 2 ou 5 chiffres uniquement (département ou commune).\n")
+        elif choice == "0":
+            print("\n👋 Au revoir !\n")
             break
-
         else:
-            print("Option invalide.")
+            print("❌ Option invalide.")
 
 if __name__ == "__main__":
     main_menu()
