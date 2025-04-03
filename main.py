@@ -16,8 +16,8 @@ def main_menu():
                 population, nom, code_utilise = api.get_population_by_code(code)
                 if population:
                     url_cp = f"https://www.code-postal.com/{code_utilise}.html"
-                    print(f"\n➡️  Population de {nom} ({code_utilise}) : {population}")
-                    print(f"➡️  Plus d'infos ? ce lien renvoie vers une carte qui montre la zone géographique éxacte de {nom} : {url_cp}\n")
+                    print(f"\n✳️  Population de {nom} ({code_utilise}) : {population}")
+                    print(f"✳️  Plus d'infos ?  {url_cp} (carte de la zone géographique éxacte de {nom})\n")
                 else:
                     print(f"\n❌ Aucune commune trouvée pour le code {code_utilise}.\n")
             else:
