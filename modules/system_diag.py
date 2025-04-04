@@ -29,15 +29,71 @@ class SystemDiagSSH:
         try:
             result = self.conn.run(command, hide=True, warn=True, encoding='utf-8')
             output = result.stdout.strip()
-            if parse and label == "CPU":
-                parsed = {}
-                for line in output.splitlines():
-                    if ":" in line:
-                        key, value = line.split(":", 1)
-                        parsed[key.strip()] = value.strip()
-                self.results[label] = parsed
+
+            if parse:
+                if label == "CPU":
+                    parsed = {}
+                    for line in output.splitlines():
+                        if ":" in line:
+                            key, value = line.split(":", 1)
+                            parsed[key.strip()] = value.strip()
+                    self.results[label] = parsed
+
+                elif label == "RAM":
+                    parts = output.split()
+                    if len(parts) >= 2:
+                        self.results[label] = {"total": parts[1]}
+                    else:
+                        self.results[label] = {"total": "N/A"}
+
+                elif label == "Bigs process":
+                    lines = output.splitlines()[1:]
+                    processes = []
+                    for line in lines:
+                        parts = line.split(None, 2)
+                        if len(parts) == 3:
+                            processes.append({"PID": parts[0], "COMMAND": parts[1], "%MEM": parts[2]})
+                    self.results[label] = processes
+
+                elif label == "Env variable":
+                    env = {}
+                    for line in output.splitlines():
+                        if "=" in line:
+                            k, v = line.split("=", 1)
+                            env[k.strip()] = v.strip()
+                    self.results[label] = env
+
+                elif label == "Disk usage":
+                    lines = output.splitlines()[1:]
+                    disks = {}
+                    for line in lines:
+                        parts = line.split()
+                        if len(parts) == 6:
+                            disks[parts[5]] = {
+                                "size": parts[1], "used": parts[2],
+                                "avail": parts[3], "pcent": parts[4]
+                            }
+                    self.results[label] = disks
+
+                elif label == "Disks":
+                    lines = output.splitlines()[1:]
+                    disks = []
+                    for line in lines:
+                        parts = line.split()
+                        if len(parts) >= 4:
+                            disks.append({
+                                "NAME": parts[0],
+                                "SIZE": parts[1],
+                                "TYPE": parts[2],
+                                "MOUNTPOINT": parts[3] if len(parts) > 3 else ""
+                            })
+                    self.results[label] = disks
+
+                else:
+                    self.results[label] = output
             else:
                 self.results[label] = output
+
         except Exception:
             self.results[label] = None
             self.failures.append(label)
@@ -46,11 +102,11 @@ class SystemDiagSSH:
         cmds = {
             "OS": ("uname -srmo", False),
             "CPU": ("lscpu | grep -E \"Nom|Architecture|Processeur\"", True),
-            "RAM": ("free -h | grep Mem", False),
-            "Bigs process": ("ps -eo pid,comm,%mem --sort=-%mem | head -n 6", False),
-            "Env variable": ("printenv | grep -E \"^(PATH|HOME|USER)=\"", False),
-            "Disks": ("lsblk -o NAME,SIZE,TYPE,MOUNTPOINT", False),
-            "Disk usage": ("df -h --output=source,size,used,avail,pcent,target", False),
+            "RAM": ("free -h | grep Mem", True),
+            "Bigs process": ("ps -eo pid,comm,%mem --sort=-%mem | head -n 6", True),
+            "Env variable": ("printenv | grep -E \"^(PATH|HOME|USER)=\"", True),
+            "Disks": ("lsblk -o NAME,SIZE,TYPE,MOUNTPOINT", True),
+            "Disk usage": ("df -h --output=source,size,used,avail,pcent,target", True),
             "Network interfaces": ("ip -o link show | awk -F': ' '{print $2}'", False),
             "Boot time": ("who -b | awk '{print $3, $4}'", False)
         }
@@ -70,10 +126,11 @@ class SystemDiagSSH:
             "OS", "CPU", "RAM", "Bigs process", "Env variable",
             "Disks", "Disk usage", "Network interfaces", "Boot time"
         ]}
-        # Formater joliment les dicts (comme CPU)
         for key, val in data.items():
             if isinstance(val, dict):
                 data[key] = '\n'.join(f"{k} : {v}" for k, v in val.items())
+            elif isinstance(val, list):
+                data[key] = '\n'.join([f"{', '.join(f'{k}: {v}' for k, v in item.items())}" for item in val])
         data = {"IP target": self.host, **data}
 
         df = pd.DataFrame([data])

@@ -1,5 +1,7 @@
 import re
 import os
+import ipaddress
+
 
 RESERVED_NAMES = {
     'CON', 'PRN', 'AUX', 'NUL',
@@ -28,3 +30,10 @@ def is_valid_excel_path(path):
         return False
 
     return True
+
+def is_valid_ip(address):
+    try:
+        ipaddress.ip_address(address)
+        return True
+    except ValueError:
+        return False

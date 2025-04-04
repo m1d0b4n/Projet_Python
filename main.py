@@ -1,7 +1,7 @@
 from modules.geo_api import GeoAPI
 from modules.ascii_art import ascii_printer
 from modules.log_analyzer import LogAnalyzer
-from utils.validators import is_valid_excel_path
+from utils.validators import is_valid_excel_path, is_valid_ip
 from getpass import getpass
 from modules.system_diag import SystemDiagSSH
 
@@ -78,8 +78,13 @@ def main_menu():
 # ------| Choix 3 |------------------------------------------
         elif choice == "3":
             print("\n👉 Connexion SSH pour diagnostic distant")
-            host = input("\n👉 Adresse IP ou nom de domaine de la machine distante : ").strip()
-            user = input("\n👉 Nom d'utilisateur : ").strip()
+            while True:
+                host = input("\n👉 Adresse IP ou nom de domaine de la machine distante : ").strip()
+                if is_valid_ip(host):
+                    break
+                else:
+                    print("\n❌ Adresse IP invalide. Veuillez entrer une adresse IP valide.")
+            user = input("   Nom d'utilisateur : ").strip()
             password = getpass("   Mot de passe : ")
 
             diag = SystemDiagSSH(host, user, password)
