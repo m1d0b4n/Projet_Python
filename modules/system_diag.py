@@ -1,6 +1,5 @@
 from fabric import Connection
 import pandas as pd
-import datetime
 import os
 
 class SystemDiagSSH:
@@ -26,28 +25,37 @@ class SystemDiagSSH:
             print(f"\n❌ Connexion SSH échouée : {e}")
             return False
 
-    def run_command(self, label, command):
+    def run_command(self, label, command, parse=False):
         try:
-            result = self.conn.run(command, hide=True, warn=True)
-            self.results[label] = result.stdout.strip()
+            result = self.conn.run(command, hide=True, warn=True, encoding='utf-8')
+            output = result.stdout.strip()
+            if parse and label == "CPU":
+                parsed = {}
+                for line in output.splitlines():
+                    if ":" in line:
+                        key, value = line.split(":", 1)
+                        parsed[key.strip()] = value.strip()
+                self.results[label] = parsed
+            else:
+                self.results[label] = output
         except Exception:
             self.results[label] = None
             self.failures.append(label)
 
     def collect_info(self):
         cmds = {
-            "OS": "uname -a",
-            "CPU": "lscpu",
-            "RAM": "free -h",
-            "TOP_RAM_Procs": "ps aux --sort=-%mem | head -n 6",
-            "ENV_VARS": "printenv",
-            "DISKS": "lsblk",
-            "DISK_USAGE": "df -h",
-            "NETWORK_INTERFACES": "ip -o link show | awk -F': ' '{print $2}'",
-            "BOOT_TIME": "who -b | awk '{print $3, $4}'"
+            "OS": ("uname -srmo", False),
+            "CPU": ("lscpu | grep -E \"Nom|Architecture|Processeur\"", True),
+            "RAM": ("free -h | grep Mem", False),
+            "Bigs process": ("ps -eo pid,comm,%mem --sort=-%mem | head -n 6", False),
+            "Env variable": ("printenv | grep -E \"^(PATH|HOME|USER)=\"", False),
+            "Disks": ("lsblk -o NAME,SIZE,TYPE,MOUNTPOINT", False),
+            "Disk usage": ("df -h --output=source,size,used,avail,pcent,target", False),
+            "Network interfaces": ("ip -o link show | awk -F': ' '{print $2}'", False),
+            "Boot time": ("who -b | awk '{print $3, $4}'", False)
         }
-        for label, cmd in cmds.items():
-            self.run_command(label, cmd)
+        for label, (cmd, parse) in cmds.items():
+            self.run_command(label, cmd, parse=parse)
 
     def print_summary(self):
         if self.failures:
@@ -58,12 +66,19 @@ class SystemDiagSSH:
             print("\n✅ Diagnostic complété avec succès !")
 
     def export_to_excel(self, path):
-        now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        rows = [{"Clé": k, "Valeur": v, "Date": now} for k, v in self.results.items() if v]
+        data = {label: self.results.get(label, "N/A") for label in [
+            "OS", "CPU", "RAM", "Bigs process", "Env variable",
+            "Disks", "Disk usage", "Network interfaces", "Boot time"
+        ]}
+        # Formater joliment les dicts (comme CPU)
+        for key, val in data.items():
+            if isinstance(val, dict):
+                data[key] = '\n'.join(f"{k} : {v}" for k, v in val.items())
+        data = {"IP target": self.host, **data}
 
-        df = pd.DataFrame(rows)
+        df = pd.DataFrame([data])
+
         sheet_name = "System status"
-
         file_exists = os.path.exists(path)
 
         if file_exists:

@@ -95,7 +95,7 @@ def main_menu():
                             if is_valid_excel_path(out_path):
                                 try:
                                     diag.export_to_excel(out_path)
-                                    print(f"\n✳️ Export terminé avec succès : {out_path}")
+                                    print(f"\n✳️  Export terminé avec succès : {out_path}")
                                 except Exception as e:
                                     print(f"\n❌ Erreur lors de l'export : {e}")
                                 break
