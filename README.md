@@ -43,17 +43,20 @@ Ce projet Python interactif propose un menu terminal intuitif avec plusieurs out
 
 ```bash
 .
-├── main.py                   # Menu interactif principal
-├── modules/
-│   ├── ascii_art.py         # Affichage ASCII d'accueil
-│   ├── geo_api.py           # Requête API géographique
-│   ├── log_analyzer.py      # Analyse des logs JSON
-│   └── system_diag.py       # Diagnostic système via SSH
+├── main.py                    # Menu interactif principal
+├── modules/                   # Modules principaux
+│   ├── ascii_art.py           # Affichage ASCII d'accueil
+│   ├── geo_api.py             # Requête API géographique
+│   ├── log_analyzer.py        # Analyse des logs JSON
+│   └── system_diag.py         # Diagnostic système via SSH
 ├── utils/
-│   └── validators.py        # Validation des chemins fichiers
-├── data/
-│   └── logs.json            # Exemple de fichier log à analyser
-├── requirements.txt         # Dépendances Python
+│   └── validators.py          # Fonctions de validation (chemins, fichiers…)
+├── data/                      # Données d'entrée
+│   ├── logs.json              # Exemple de logs fournis
+│   └── ...                    # Autres fichiers de travail
+├── extracts_examples/         # Fichiers Excel générés à titre d'exemples
+│   └── *.xlsx                 # Exports de logs ou diagnostics
+├── requirements.txt           # Dépendances Python
 └── README.md
 ```
 
