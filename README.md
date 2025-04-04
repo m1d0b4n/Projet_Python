@@ -91,5 +91,5 @@ Liste issue de `requirements.txt` :
 ## 🧠 Auteur
 
 Projet réalisé dans le cadre du module Python à l'école LiveCampus (2025)  
-👨‍💻 **Apprenant :** `m1d0b4n`   
+👨‍💻 **Apprenant :** [m1d0b4n](https://github.com/m1d0b4n)   
 👨‍🏫 **Enseignant :** Alexandre RASPAUD   
