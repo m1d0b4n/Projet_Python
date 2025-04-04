@@ -81,13 +81,17 @@ class SystemDiagSSH:
                     for line in lines:
                         parts = line.split()
                         if len(parts) >= 4:
-                            disks.append({
-                                "NAME": parts[0],
-                                "SIZE": parts[1],
-                                "TYPE": parts[2],
-                                "MOUNTPOINT": parts[3] if len(parts) > 3 else ""
-                            })
+                            name_clean = parts[0].replace("├─", "").replace("└─", "").replace("│", "").strip("─ ")
+                            disks.append(f"{name_clean}, SIZE: {parts[1]}, TYPE: {parts[2]}, MOUNTPOINT: {parts[3] if len(parts) > 3 else ''}")
                     self.results[label] = disks
+
+                elif label == "Network interfaces":
+                    interfaces = output.splitlines()
+                    self.results[label] = interfaces
+
+                elif label == "Boot time":
+                    parts = output.split()
+                    self.results[label] = {"Boot time": " ".join(parts) if parts else "N/A"}
 
                 else:
                     self.results[label] = output
@@ -107,8 +111,8 @@ class SystemDiagSSH:
             "Env variable": ("printenv | grep -E \"^(PATH|HOME|USER)=\"", True),
             "Disks": ("lsblk -o NAME,SIZE,TYPE,MOUNTPOINT", True),
             "Disk usage": ("df -h --output=source,size,used,avail,pcent,target", True),
-            "Network interfaces": ("ip -o link show | awk -F': ' '{print $2}'", False),
-            "Boot time": ("who -b | awk '{print $3, $4}'", False)
+            "Network interfaces": ("ip -o link show | awk -F': ' '{print $2}'", True),
+            "Boot time": ("who -b | awk '{print $3, $4}'", True)
         }
         for label, (cmd, parse) in cmds.items():
             self.run_command(label, cmd, parse=parse)
@@ -128,11 +132,21 @@ class SystemDiagSSH:
         ]}
         for key, val in data.items():
             if isinstance(val, dict):
-                data[key] = '\n'.join(f"{k} : {v}" for k, v in val.items())
+                if key == "Disk usage":
+                    data[key] = '\n'.join(
+                        f"{mount} > " + ', '.join(f"{k} : {v}" for k, v in details.items())
+                        for mount, details in val.items()
+                    )
+                else:
+                    data[key] = '\n'.join(f"{k} : {v}" for k, v in val.items())
             elif isinstance(val, list):
-                data[key] = '\n'.join([f"{', '.join(f'{k}: {v}' for k, v in item.items())}" for item in val])
-        data = {"IP target": self.host, **data}
+                data[key] = '\n'.join(
+                    item if isinstance(item, str)
+                    else ', '.join(f"{k}: {v}" for k, v in item.items())
+                    for item in val
+                )
 
+        data = {"IP target": self.host, **data}
         df = pd.DataFrame([data])
 
         sheet_name = "System status"
