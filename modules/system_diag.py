@@ -1,6 +1,8 @@
 from fabric import Connection
 import pandas as pd
 import os
+from openpyxl import load_workbook
+from openpyxl.styles import Alignment
 
 class SystemDiagSSH:
     def __init__(self, host, user, password):
@@ -151,10 +153,18 @@ class SystemDiagSSH:
 
         sheet_name = "System status"
         file_exists = os.path.exists(path)
-
         if file_exists:
             with pd.ExcelWriter(path, engine='openpyxl', mode='a', if_sheet_exists='new') as writer:
                 df.to_excel(writer, sheet_name=sheet_name, index=False)
         else:
             with pd.ExcelWriter(path, engine='openpyxl', mode='w') as writer:
                 df.to_excel(writer, sheet_name=sheet_name, index=False)
+
+        # Ajuster l'alignement dans les cellules (hors entête)
+        wb = load_workbook(path)
+        ws = wb[sheet_name]
+        alignment = Alignment(vertical='top', horizontal='left', wrap_text=True)
+        for row in ws.iter_rows(min_row=2):
+            for cell in row:
+                cell.alignment = alignment
+        wb.save(path)
