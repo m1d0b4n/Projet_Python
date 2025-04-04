@@ -90,6 +90,6 @@ Liste issue de `requirements.txt` :
 
 ## 🧠 Auteur
 
-Projet réalisé dans le cadre du module Python à l'école LiveCampus (2025)
-👨‍💻 **Apprenant :** `m1d0b4n`  
-👨‍🏫 **Enseignant :** Alexandre RASPAUD
+Projet réalisé dans le cadre du module Python à l'école LiveCampus (2025)  
+👨‍💻 **Apprenant :** `m1d0b4n`   
+👨‍🏫 **Enseignant :** Alexandre RASPAUD   
