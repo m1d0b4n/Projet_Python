@@ -65,7 +65,10 @@ class SystemDiagSSH:
         sheet_name = "System status"
 
         file_exists = os.path.exists(path)
-        mode = 'a' if file_exists else 'w'
 
-        with pd.ExcelWriter(path, engine='openpyxl', mode=mode, if_sheet_exists='new') as writer:
-            df.to_excel(writer, sheet_name=sheet_name, index=False)
+        if file_exists:
+            with pd.ExcelWriter(path, engine='openpyxl', mode='a', if_sheet_exists='new') as writer:
+                df.to_excel(writer, sheet_name=sheet_name, index=False)
+        else:
+            with pd.ExcelWriter(path, engine='openpyxl', mode='w') as writer:
+                df.to_excel(writer, sheet_name=sheet_name, index=False)

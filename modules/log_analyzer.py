@@ -49,5 +49,5 @@ class LogAnalyzer:
             with pd.ExcelWriter(output_path, engine='openpyxl', mode='a', if_sheet_exists='new') as writer:
                 df.to_excel(writer, sheet_name=sheet_name, index=False)
         else:
-            with pd.ExcelWriter(output_path, engine='openpyxl') as writer:
+            with pd.ExcelWriter(output_path, engine='openpyxl', mode='w') as writer:
                 df.to_excel(writer, sheet_name=sheet_name, index=False)
