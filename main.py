@@ -81,7 +81,7 @@ def main_menu():
             print("\n👉 Connexion SSH pour diagnostic distant")
             host = input("\n👉 Adresse IP ou nom de domaine de la machine distante : ").strip()
             user = input("\n👉 Nom d'utilisateur : ").strip()
-            password = getpass.getpass("\n👉 Mot de passe : ")
+            password = getpass.getpass("\nMot de passe : ")
 
             diag = SystemDiagSSH(host, user, password)
             if diag.connect():
