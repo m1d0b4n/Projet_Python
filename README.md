@@ -1,4 +1,5 @@
-# 🐍 Projet Python 2025 — Diagnostic, Géolocalisation et Analyse de Logs
+# 🐍 Projet Python 2025 🐍
+# Diagnostic | Géolocalisation | Analyse de Logs
 
 ![Python](https://img.shields.io/badge/python-3.10+-blue.svg)
 ![Status](https://img.shields.io/badge/status-maintained-brightgreen)
