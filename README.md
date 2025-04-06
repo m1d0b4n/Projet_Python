@@ -146,6 +146,6 @@ Projet réalisé dans le cadre du module Python 2025
 
 ## 🖼️ Screenshots
 
-![screenshot](./data/img/screenshot.png)
+![screenshot](./data/screenshot.png)
 
 ---
