@@ -1,5 +1,9 @@
 # 🐍 Projet Python 2025 — Diagnostic, Géolocalisation et Analyse de Logs
 
+![Python](https://img.shields.io/badge/python-3.10+-blue.svg)
+![Status](https://img.shields.io/badge/status-maintained-brightgreen)
+![Made with](https://img.shields.io/badge/made%20with-%E2%9D%A4-red)
+
 Ce projet Python interactif propose un menu terminal intuitif avec plusieurs outils intégrés. Il s’adresse à toute personne souhaitant :
 - Obtenir des informations géographiques via une API publique
 - Analyser un fichier de logs JSON
