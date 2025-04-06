@@ -10,6 +10,8 @@ Ce projet Python interactif propose un menu terminal intuitif avec plusieurs out
 - Analyser un fichier de logs JSON
 - Effectuer un diagnostic système distant via SSH
 
+<img alt="Coding" width="1483" height="10" src="https://i.gifer.com/3cpp.gif">   
+
 ## 📦 Version Windows (.exe)
 Une version exécutable est disponible directement pour Windows dans l'onglet [Releases](../../releases) du dépôt.
 
