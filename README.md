@@ -66,7 +66,7 @@ Ce projet Python interactif propose un menu terminal intuitif avec plusieurs out
 
 1. Cloner le repo ou télécharger le zip :
 ```bash
-git clone <url-du-repo> && cd Projet_Python
+git clone https://github.com/m1d0b4n/Projet_Python.git && cd Projet_Python
 ```
 
 2. Installer les dépendances :
