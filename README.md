@@ -9,6 +9,13 @@ Ce projet Python interactif propose un menu terminal intuitif avec plusieurs out
 - Analyser un fichier de logs JSON
 - Effectuer un diagnostic système distant via SSH
 
+## 📦 Version Windows (.exe)
+Une version exécutable est disponible directement pour Windows dans l'onglet [Releases](../../releases) du dépôt.
+
+😎 **Aucune installation de Python n'est requise !**
+
+---
+
 ## 📋 Fonctionnalités disponibles
 
 ### 1️⃣ Rechercher la population par code
@@ -47,18 +54,19 @@ Ce projet Python interactif propose un menu terminal intuitif avec plusieurs out
 
 ```bash
 .
-├── main.py                    # Menu interactif principal
+├── main.py                     # Menu interactif principal
 ├── modules/                   # Modules principaux
 │   ├── ascii_art.py           # Affichage ASCII d'accueil
 │   ├── geo_api.py             # Requête API géographique
 │   ├── log_analyzer.py        # Analyse des logs JSON
 │   └── system_diag.py         # Diagnostic système via SSH
 ├── utils/
-│   └── validators.py          # Fonctions de validation (chemins, fichiers…)
+│   ├── validators.py          # Fonctions de validation (chemins, fichiers…)
+│   └── exporter.py            # Gestion factorisée des exports Excel
 ├── data/                      # Données d'entrée
 │   ├── logs.json              # Exemple de logs fournis
 │   └── ...                    # Autres fichiers de travail
-├── extracts_examples/         # Fichiers Excel générés à titre d'exemples
+├── extracts_examples/         # Fichiers Excel générés ou exemples d'exports
 │   └── *.xlsx                 # Exports de logs ou diagnostics
 ├── requirements.txt           # Dépendances Python
 └── README.md
@@ -66,7 +74,9 @@ Ce projet Python interactif propose un menu terminal intuitif avec plusieurs out
 
 ---
 
-## 🚀 Installation
+## 🚀 Installation manuelle (mode développeur)
+
+🔧 **Pré-requis :** Avoir [Python 3.10+](https://www.python.org/downloads/) installé sur votre machine.
 
 1. Cloner le repo ou télécharger le zip :
 ```bash
@@ -85,6 +95,34 @@ python main.py
 
 ---
 
+## 🛠️ Compiler en .exe (pour Windows)
+
+🔧 **Pré-requis :** Avoir [Python installé](https://www.python.org/downloads/) et `pip` disponible.
+
+1. Cloner le repo ou télécharger le zip :
+```bash
+git clone https://github.com/m1d0b4n/Projet_Python.git && cd Projet_Python
+```
+
+2. Installer PyInstaller :
+```bash
+pip install pyinstaller
+```
+
+3. Compiler le projet :
+```bash
+pyinstaller --name "ProjetPython2025" --onefile main.py
+```
+
+➡️ Un fichier `ProjetPython2025.exe` apparaîtra dans le dossier `dist/`
+
+💡 Pour ajouter une icône personnalisée :
+```bash
+pyinstaller --name "ProjetPython2025" --onefile main.py --icon=<./chemin_vers_icon.ico>
+```
+
+---
+
 ## 📦 Dépendances
 
 Liste issue de `requirements.txt` :
@@ -97,6 +135,14 @@ Liste issue de `requirements.txt` :
 
 ## 🧠 Auteur
 
-Projet réalisé dans le cadre du module Python à l'école LiveCampus (2025)  
-👨‍💻 **Apprenant :** [m1d0b4n](https://github.com/m1d0b4n)   
-👨‍🏫 **Enseignant :** Alexandre RASPAUD   
+Projet réalisé dans le cadre du module Python 2025  
+👨‍💻 **Apprenant :** `m1d0b4n`  
+👨‍🏫 **Enseignant :** Alexandre RASPAUD
+
+---
+
+## 🖼️ Screenshots (optionnel)
+
+![screenshot](./data/img/screenshot.png)
+
+---
